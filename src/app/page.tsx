@@ -1,9 +1,12 @@
 import { About } from "@/components/About";
+import { ArticlesSection } from "@/components/ArticlesSection";
+import { Certificates } from "@/components/Certificates";
 import { Contact } from "@/components/Contact";
 import { Experience } from "@/components/Experience";
 import { Footer } from "@/components/Footer";
-import { HeroCard } from "@/components/HeroCard";
+import { HeroSection } from "@/components/HeroSection";
 import { Navbar } from "@/components/Navbar";
+import { OpenSource } from "@/components/OpenSource";
 import { Projects } from "@/components/Projects";
 import { Skills } from "@/components/Skills";
 
@@ -18,10 +21,13 @@ export default function Home() {
       </a>
       <Navbar />
       <main>
-        <HeroCard />
+        <HeroSection />
         <About />
         <Skills />
         <Projects />
+        <OpenSource />
+        <Certificates />
+        <ArticlesSection />
         <Experience />
         <Contact />
       </main>

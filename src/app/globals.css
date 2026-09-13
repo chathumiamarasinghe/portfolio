@@ -51,6 +51,8 @@
   --radius-3xl: calc(var(--radius) * 2.2);
   --radius-4xl: calc(var(--radius) * 2.6);
   --shadow-accent-glow: 0 0 20px #e8441a40;
+  --breakpoint-xs: 30rem;
+  --breakpoint-3xl: 120rem;
 }
 
 :root,
@@ -91,6 +93,7 @@
 
 @layer base {
   * {
+    box-sizing: border-box;
     @apply border-border outline-ring/50;
   }
 
@@ -109,6 +112,36 @@
   h4 {
     font-family: var(--font-heading);
   }
+}
+
+.section-shell {
+  padding-block: clamp(4.5rem, 8vw, 9rem);
+}
+
+.section-wrap {
+  width: 100%;
+  max-width: 1400px;
+  margin-inline: auto;
+  padding-inline: clamp(1rem, 3vw, 4rem);
+}
+
+.section-wrap-narrow {
+  width: 100%;
+  max-width: 860px;
+  margin-inline: auto;
+  padding-inline: clamp(1rem, 3vw, 4rem);
+}
+
+.section-title {
+  font-size: clamp(28px, 4vw, 52px);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+}
+
+.section-subtitle {
+  font-size: clamp(14px, 1.5vw, 18px);
+  line-height: 1.7;
 }
 
 ::selection {

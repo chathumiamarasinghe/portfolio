@@ -7,9 +7,9 @@ export function Experience() {
   return (
     <section
       id="experience"
-      className="scroll-mt-24 border-t border-white/8 bg-surface py-24 sm:py-28"
+      className="section-shell scroll-mt-24 border-t border-white/8 bg-surface"
     >
-      <div className="mx-auto max-w-6xl px-5 sm:px-8 lg:px-16">
+      <div className="section-wrap-narrow">
         <motion.div
           initial={{ opacity: 0, y: 24 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -20,12 +20,12 @@ export function Experience() {
           <p className="font-mono text-xs tracking-[0.2em] text-accent uppercase">
             Experience
           </p>
-          <h2 className="mt-3 font-heading text-3xl font-semibold tracking-tight sm:text-4xl">
+          <h2 className="section-title mt-3 font-heading tracking-tight">
             A short path, taken seriously
           </h2>
         </motion.div>
 
-        <div className="relative mx-auto mt-16 max-w-4xl">
+        <div className="relative mx-auto mt-16 max-w-[860px]">
           <div
             className="absolute top-0 bottom-0 left-4 w-px bg-accent/70 md:left-1/2 md:-translate-x-1/2"
             aria-hidden

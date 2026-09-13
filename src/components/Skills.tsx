@@ -39,9 +39,9 @@ export function Skills() {
   return (
     <section
       id="skills"
-      className="scroll-mt-24 border-t border-white/8 bg-surface py-24 sm:py-28"
+      className="section-shell scroll-mt-24 border-t border-white/8 bg-surface"
     >
-      <div className="mx-auto max-w-6xl px-5 sm:px-8 lg:px-16">
+      <div className="section-wrap">
         <motion.div
           initial={{ opacity: 0, y: 24 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -51,7 +51,7 @@ export function Skills() {
           <p className="font-mono text-xs tracking-[0.2em] text-accent uppercase">
             Skills
           </p>
-          <h2 className="mt-3 font-heading text-3xl font-semibold tracking-tight sm:text-4xl">
+          <h2 className="section-title mt-3 font-heading tracking-tight">
             A stack that goes from notebook to production
           </h2>
         </motion.div>
@@ -94,7 +94,7 @@ export function Skills() {
                 transition: { staggerChildren: 0.05 },
               },
             }}
-            className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3"
+            className="mt-10 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6"
           >
             {visible.map((skill) => (
               <motion.li

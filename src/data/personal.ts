@@ -1,0 +1,41 @@
+export const personal = {
+  name: "Chathumi Perera",
+  initials: "CP",
+  role: "Intern AI Engineer",
+  handle: "@chathumi",
+  email: "sanchanaamarasinghe@gmail.com",
+  location: "Colombo, Sri Lanka",
+  website: "chathumi.dev",
+  websiteUrl: "https://chathumi.dev",
+  github: "https://github.com/chathumiamarasinghe",
+  linkedin: "https://www.linkedin.com/in/chathumi-perera-",
+  mediumUsername: "chathumiamarasinghe",
+  mediumUrl: "https://medium.com/@chathumiamarasinghe",
+  kaggle: "https://www.kaggle.com/chathumi",
+  twitter: "https://x.com/chathumi",
+  tagline: "Creating passion about AI, designing in technology.",
+  bio: "Let's build something tomorrow.",
+  title: "Intern AI Engineer",
+  avatar: "/images/profile.png",
+  avatarCutout: "/images/avatar.png",
+  heroBackground: "/images/hero-bg.jpg",
+  experienceStartYear: 2022,
+  quotes: [
+    {
+      text: "The best things are built quietly — by imperfect hands, disciplined minds, and dreams too stubborn to stop.",
+      author: "Chathumi Perera",
+    },
+    {
+      text: "I'm an introvert with a loud work ethic. Ethics before output. Dreams before doubt.",
+      author: "Chathumi Perera",
+    },
+    {
+      text: "Perfect is the enemy of done. Imperfect and shipped beats flawless and hidden.",
+      author: "Chathumi Perera",
+    },
+    {
+      text: "Quiet discipline. Loud results. That's the introvert's superpower.",
+      author: "Chathumi Perera",
+    },
+  ],
+} as const;

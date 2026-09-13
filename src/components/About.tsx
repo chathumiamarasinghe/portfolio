@@ -3,14 +3,26 @@
 import Image from "next/image";
 import { motion } from "framer-motion";
 import { site } from "@/data/site";
+import { useStats } from "@/hooks/useStats";
 
 export function About() {
+  const { stats, loading } = useStats();
+
+  const highlights = [
+    { value: loading ? "…" : stats.repos, label: "Projects Built" },
+    { value: loading ? "…" : stats.technologies, label: "Technologies Used" },
+    { value: loading ? "…" : stats.certificates, label: "Certifications" },
+    { value: loading ? "…" : stats.articles, label: "Articles" },
+    { value: loading ? "…" : stats.comments, label: "Comments" },
+    { value: loading ? "…" : stats.stars, label: "GitHub Stars" },
+  ];
+
   return (
     <section
       id="about"
-      className="scroll-mt-24 border-t border-white/8 bg-background py-24 sm:py-28"
+      className="section-shell scroll-mt-24 border-t border-white/8 bg-background"
     >
-      <div className="mx-auto max-w-6xl px-5 sm:px-8 lg:px-16">
+      <div className="section-wrap">
         <motion.div
           initial={{ opacity: 0, y: 24 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -42,10 +54,10 @@ export function About() {
             <p className="font-mono text-xs tracking-[0.2em] text-accent uppercase">
               About
             </p>
-            <h2 className="mt-3 font-heading text-3xl font-semibold tracking-tight sm:text-4xl">
+            <h2 className="section-title mt-3 font-heading tracking-tight">
               Building with data, shipping like a product person
             </h2>
-            <p className="mt-5 text-[15px] leading-7 text-text-primary/80">
+            <p className="section-subtitle mt-5 text-text-primary/80">
               {site.about.story}
             </p>
           </div>
@@ -56,15 +68,19 @@ export function About() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.2 }}
           transition={{ duration: 0.6, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
-          className="mt-14 grid gap-4 sm:grid-cols-3"
+          className="mt-14 grid gap-4 sm:grid-cols-2 lg:grid-cols-3"
         >
-          {site.about.highlights.map((item) => (
+          {highlights.map((item) => (
             <div
               key={item.label}
               className="rounded-2xl border border-white/8 bg-surface p-6"
             >
               <p className="font-heading text-3xl font-semibold text-accent">
-                {item.value}
+                {loading ? (
+                  <span className="inline-block h-8 w-16 animate-pulse rounded bg-white/10" />
+                ) : (
+                  item.value
+                )}
               </p>
               <p className="mt-1 text-sm text-text-muted">{item.label}</p>
             </div>

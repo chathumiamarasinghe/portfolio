@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import { Geist_Mono, Inter, Space_Grotesk } from "next/font/google";
+import { ChatWidget } from "@/components/ChatWidget";
+import { personal } from "@/data/personal";
 import { site } from "@/data/site";
 import "./globals.css";
 
@@ -22,6 +24,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(personal.websiteUrl),
   title: `${site.name} — ${site.role}`,
   description: site.tagline,
   authors: [{ name: site.name }],
@@ -33,8 +36,9 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       lang="en"
       className={`${inter.variable} ${spaceGrotesk.variable} ${geistMono.variable} dark h-full antialiased`}
     >
-      <body className="min-h-full bg-background font-sans text-text-primary">
+      <body className="relative min-h-full bg-background font-sans text-text-primary">
         {children}
+        <ChatWidget />
       </body>
     </html>
   );

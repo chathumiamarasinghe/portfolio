@@ -8,9 +8,13 @@ export function Footer() {
 
   return (
     <footer className="border-t border-white/8 bg-background">
-      <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-5 py-6 sm:px-8 lg:px-16">
+      <div className="section-wrap flex items-center justify-between gap-4 py-6">
         <p className="text-xs text-text-muted sm:text-sm">
           Designed & Built by {site.name} • {year}
+          {" · "}
+          <a href={`mailto:${site.email}`} className="hover:text-accent-light">
+            {site.email}
+          </a>
         </p>
         <a
           href="#home"

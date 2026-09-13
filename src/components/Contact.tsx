@@ -1,23 +1,15 @@
 "use client";
 
-import { type FormEvent, useState } from "react";
+import { useState } from "react";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { motion } from "framer-motion";
+import { CheckCircle2, Loader2 } from "lucide-react";
+import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { contactSchema, type ContactInput } from "@/lib/contact-schema";
 import { site } from "@/data/site";
-
-interface FormState {
-  name: string;
-  email: string;
-  message: string;
-}
-
-interface FormErrors {
-  name?: string;
-  email?: string;
-  message?: string;
-}
 
 interface SocialIconProps {
   className?: string;
@@ -62,46 +54,43 @@ const socials = [
   { href: site.socials.twitter, label: "Twitter", icon: TwitterIcon },
 ] as const;
 
-const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-function validate(values: FormState): FormErrors {
-  const errors: FormErrors = {};
-  if (values.name.trim().length < 2) {
-    errors.name = "Please enter your name.";
-  }
-  if (!emailPattern.test(values.email.trim())) {
-    errors.email = "Please enter a valid email.";
-  }
-  if (values.message.trim().length < 10) {
-    errors.message = "Message should be at least 10 characters.";
-  }
-  return errors;
-}
-
 export function Contact() {
-  const [values, setValues] = useState<FormState>({
-    name: "",
-    email: "",
-    message: "",
+  const [serverError, setServerError] = useState<string | null>(null);
+  const [sent, setSent] = useState(false);
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+  } = useForm<ContactInput>({
+    resolver: zodResolver(contactSchema),
+    defaultValues: { name: "", email: "", message: "" },
   });
-  const [errors, setErrors] = useState<FormErrors>({});
-  const [submitted, setSubmitted] = useState(false);
 
-  function handleSubmit(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    const nextErrors = validate(values);
-    setErrors(nextErrors);
-    if (Object.keys(nextErrors).length === 0) {
-      setSubmitted(true);
+  async function onSubmit(values: ContactInput) {
+    setServerError(null);
+    try {
+      const response = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(values),
+      });
+      const payload = (await response.json()) as { success?: boolean; error?: string };
+      if (!response.ok || !payload.success) {
+        setServerError(payload.error ?? "Something went wrong. Try again.");
+        return;
+      }
+      setSent(true);
+    } catch {
+      setServerError("Something went wrong. Try again.");
     }
   }
 
   return (
     <section
       id="contact"
-      className="scroll-mt-24 border-t border-white/8 bg-background py-24 sm:py-28"
+      className="section-shell scroll-mt-24 border-t border-white/8 bg-background"
     >
-      <div className="mx-auto grid max-w-6xl gap-12 px-5 sm:px-8 lg:grid-cols-2 lg:px-16">
+      <div className="section-wrap grid gap-12 lg:grid-cols-2">
         <motion.div
           initial={{ opacity: 0, y: 24 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -111,14 +100,20 @@ export function Contact() {
           <p className="font-mono text-xs tracking-[0.2em] text-accent uppercase">
             Contact
           </p>
-          <h2 className="mt-3 font-heading text-3xl font-semibold tracking-tight sm:text-4xl">
+          <h2 className="section-title mt-3 font-heading tracking-tight">
             Let&apos;s build something tomorrow
           </h2>
-          <p className="mt-4 max-w-md text-[15px] leading-7 text-text-muted">
+          <p className="section-subtitle mt-4 max-w-md text-text-muted">
             Whether it&apos;s a model that needs a home, a product that needs
             intelligence, or a team that needs another pair of hands — send a
             note. I read every message.
           </p>
+          <a
+            href={`mailto:${site.email}`}
+            className="mt-4 inline-block text-sm text-text-primary/80 transition hover:text-accent-light"
+          >
+            {site.email}
+          </a>
           <div className="mt-8 flex gap-3">
             {socials.map(({ href, label, icon: Icon }) => (
               <a
@@ -136,7 +131,7 @@ export function Contact() {
         </motion.div>
 
         <motion.form
-          onSubmit={handleSubmit}
+          onSubmit={handleSubmit(onSubmit)}
           noValidate
           initial={{ opacity: 0, y: 24 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -144,78 +139,71 @@ export function Contact() {
           transition={{ duration: 0.6, delay: 0.08, ease: [0.22, 1, 0.36, 1] }}
           className="rounded-3xl border border-white/8 bg-surface p-6 sm:p-8"
         >
-          {submitted ? (
-            <p className="py-10 text-center text-sm text-text-primary/85">
-              Thanks — I&apos;ll get back to you soon.
-            </p>
+          {sent ? (
+            <div className="flex flex-col items-center gap-3 py-10 text-center">
+              <CheckCircle2 className="size-8 text-emerald-400" />
+              <p className="text-sm text-emerald-300">
+                Message sent! I&apos;ll reply soon.
+              </p>
+            </div>
           ) : (
-            <div className="space-y-5">
+            <fieldset disabled={isSubmitting} className="space-y-5">
               <label className="block space-y-2">
                 <span className="text-sm text-text-primary/80">Name</span>
                 <Input
-                  name="name"
-                  value={values.name}
-                  onChange={(event) =>
-                    setValues((prev) => ({ ...prev, name: event.target.value }))
-                  }
+                  {...register("name")}
                   aria-invalid={Boolean(errors.name)}
                   className="h-11 bg-background"
                   placeholder="Your name"
                 />
                 {errors.name ? (
-                  <span className="text-xs text-destructive">{errors.name}</span>
+                  <span className="text-xs text-red-400">{errors.name.message}</span>
                 ) : null}
               </label>
               <label className="block space-y-2">
                 <span className="text-sm text-text-primary/80">Email</span>
                 <Input
                   type="email"
-                  name="email"
-                  value={values.email}
-                  onChange={(event) =>
-                    setValues((prev) => ({
-                      ...prev,
-                      email: event.target.value,
-                    }))
-                  }
+                  {...register("email")}
                   aria-invalid={Boolean(errors.email)}
                   className="h-11 bg-background"
                   placeholder="you@email.com"
                 />
                 {errors.email ? (
-                  <span className="text-xs text-destructive">
-                    {errors.email}
-                  </span>
+                  <span className="text-xs text-red-400">{errors.email.message}</span>
                 ) : null}
               </label>
               <label className="block space-y-2">
                 <span className="text-sm text-text-primary/80">Message</span>
                 <Textarea
-                  name="message"
-                  value={values.message}
-                  onChange={(event) =>
-                    setValues((prev) => ({
-                      ...prev,
-                      message: event.target.value,
-                    }))
-                  }
+                  {...register("message")}
                   aria-invalid={Boolean(errors.message)}
                   className="min-h-32 bg-background"
                   placeholder="What should we build?"
                 />
                 {errors.message ? (
-                  <span className="text-xs text-destructive">
-                    {errors.message}
+                  <span className="text-xs text-red-400">
+                    {errors.message.message}
                   </span>
                 ) : null}
               </label>
+              {serverError ? (
+                <p className="text-sm text-red-400">{serverError}</p>
+              ) : null}
               <Button
                 type="submit"
                 className="h-11 w-full rounded-full bg-gradient-to-r from-accent to-accent-light text-white shadow-accent-glow hover:brightness-110"
               >
-                Send message
+                {isSubmitting ? (
+                  <>
+                    <Loader2 className="size-4 animate-spin" />
+                    Sending
+                  </>
+                ) : (
+                  "Send message"
+                )}
               </Button>
-            </div>
+            </fieldset>
           )}
         </motion.form>
       </div>

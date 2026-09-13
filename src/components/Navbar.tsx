@@ -1,22 +1,28 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { usePathname } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
 import { Menu, X } from "lucide-react";
 import { site } from "@/data/site";
 
 const navLinks = [
-  { href: "#about", id: "about", label: "About" },
-  { href: "#skills", id: "skills", label: "Skills" },
-  { href: "#projects", id: "projects", label: "Projects" },
-  { href: "#experience", id: "experience", label: "Experience" },
-  { href: "#contact", id: "contact", label: "Contact" },
+  { href: "/#about", id: "about", label: "About" },
+  { href: "/#skills", id: "skills", label: "Skills" },
+  { href: "/#projects", id: "projects", label: "Projects" },
+  { href: "/#github", id: "github", label: "GitHub" },
+  { href: "/#certificates", id: "certificates", label: "Certificates" },
+  { href: "/#articles", id: "articles", label: "Articles" },
+  { href: "/#experience", id: "experience", label: "Experience" },
+  { href: "/ideas", id: "ideas", label: "Ideas" },
+  { href: "/#contact", id: "contact", label: "Contact" },
 ] as const;
 
 export function Navbar() {
+  const pathname = usePathname();
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
-  const [active, setActive] = useState<string>("home");
+  const [active, setActive] = useState<string>(pathname === "/ideas" ? "ideas" : "home");
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 24);
@@ -26,7 +32,15 @@ export function Navbar() {
   }, []);
 
   useEffect(() => {
-    const sectionIds = ["home", ...navLinks.map((link) => link.id)];
+    if (pathname === "/ideas") {
+      setActive("ideas");
+      return;
+    }
+
+    const sectionIds = navLinks
+      .filter((link) => link.href.startsWith("/#"))
+      .map((link) => link.id);
+
     const observer = new IntersectionObserver(
       (entries) => {
         const visible = entries
@@ -39,13 +53,13 @@ export function Navbar() {
       { rootMargin: "-35% 0px -50% 0px", threshold: [0.1, 0.25, 0.5] },
     );
 
-    for (const id of sectionIds) {
+    for (const id of ["home", ...sectionIds]) {
       const el = document.getElementById(id);
       if (el) observer.observe(el);
     }
 
     return () => observer.disconnect();
-  }, []);
+  }, [pathname]);
 
   useEffect(() => {
     document.body.style.overflow = open ? "hidden" : "";
@@ -63,22 +77,22 @@ export function Navbar() {
       }`}
     >
       <nav
-        className="mx-auto flex h-16 max-w-6xl items-center justify-between px-5 sm:px-8 lg:px-16"
+        className="mx-auto flex h-16 max-w-[1400px] items-center justify-between px-4 sm:px-6 lg:px-10 xl:px-14 2xl:px-16"
         aria-label="Primary"
       >
         <a
-          href="#home"
+          href="/#home"
           className="font-mono text-lg font-bold tracking-widest text-accent"
         >
           {site.initials}
         </a>
 
-        <ul className="hidden items-center gap-8 md:flex">
+        <ul className="hidden items-center gap-5 lg:flex">
           {navLinks.map((link) => (
             <li key={link.id}>
               <a
                 href={link.href}
-                className={`text-sm transition-colors ${
+                className={`text-[13px] transition-colors ${
                   active === link.id
                     ? "text-accent"
                     : "text-text-primary/80 hover:text-text-primary"
@@ -92,7 +106,7 @@ export function Navbar() {
 
         <button
           type="button"
-          className="inline-flex size-10 items-center justify-center rounded-full text-text-primary md:hidden"
+          className="inline-flex size-10 items-center justify-center rounded-full text-text-primary lg:hidden"
           onClick={() => setOpen((prev) => !prev)}
           aria-expanded={open}
           aria-controls="mobile-nav"
@@ -110,7 +124,7 @@ export function Navbar() {
             animate={{ height: "auto", opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
             transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
-            className="overflow-hidden border-t border-white/8 bg-[#0a0a0a]/90 backdrop-blur-xl md:hidden"
+            className="overflow-hidden border-t border-white/8 bg-[#0a0a0a]/90 backdrop-blur-xl lg:hidden"
           >
             <ul className="flex flex-col gap-1 px-5 py-4">
               {navLinks.map((link, index) => (

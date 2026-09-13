@@ -9,7 +9,7 @@ export interface ExperienceItem {
 export const experience: ExperienceItem[] = [
   {
     id: "ds-engineer",
-    role: "Junior Data Science Engineer",
+    role: "Intern AI Engineer",
     company: "Northwind Labs",
     dateRange: "2024 — Present",
     bullets: [
